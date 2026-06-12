@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -31,9 +32,9 @@ public class Main {
             System.out.println("12. Відновити склад з файлу (Memento)");
             System.out.println("0. Вихід");
             System.out.print("Ваш вибір: ");
+            try {
             byte chose = sc.nextByte();
             sc.nextLine();
-            try {
                 if (chose == 1) {
                     storage.printMenu();
                 }
@@ -106,6 +107,9 @@ public class Main {
                 }
             } catch (RestaurantException e) {
                 System.out.println("\n Помилка: " + e.getMessage());
+            } catch (InputMismatchException e) {
+                System.out.println("Не вірно вказано значення");
+                break;
             }
         }
     }

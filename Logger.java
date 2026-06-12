@@ -19,4 +19,12 @@ public class Logger implements OrderObserver, Serializable {
         }
         System.out.println();
     }
+
+    public List<String> getLogs() {
+        return logs;
+    }
+
+    public void setLogs(List<String> logs) {
+        this.logs = logs;
+    }
 }

@@ -20,10 +20,6 @@ public class RestaurantStorage implements Serializable{
         }
         return instance;
     }
-
-    public Logger getLogger() {
-        return logger;
-    }
     public void addObserver(OrderObserver observer) {
         observers.add(observer);
     }
@@ -53,7 +49,12 @@ public class RestaurantStorage implements Serializable{
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             RestaurantMemento memento = (RestaurantMemento) ois.readObject();
             restoreState(memento);
+            System.out.println("\n=== ВІДНОВЛЕНІ ІНГРЕДІЄНТИ ===");
+            for (int i = 0; i < memento.getNames().size(); i++) {
+                System.out.println(" #" + (i + 1) + " " + memento.getNames().get(i) + ": " + memento.getCounts().get(i));
+            }
             System.out.println("Стан десеріалізовано з файлу.");
+
         } catch (Exception e) {
             System.out.println("Не вдалося завантажити збереження: " + e.getMessage());
         }
@@ -61,7 +62,7 @@ public class RestaurantStorage implements Serializable{
     public void addIngredient(String name, int count) {
         for (var ing : sklad) {
             if (ing.getName().equals(name)) {
-                ing.setcount(ing.getcount() + count);
+                ing.setCount(ing.getCount() + count);
                 notifyObservers("Поповнено склад: " + name + " на " + count + " шт.");
                 return;
             }
@@ -72,8 +73,8 @@ public class RestaurantStorage implements Serializable{
     public void printskladStatus() {
         System.out.println("Стан складу");
         for (var ing : sklad) {
-            if (ing.getcount() > 0) {
-                System.out.println("- " + ing.getName() + ": В наявності (" + ing.getcount() + " шт.)");
+            if (ing.getCount() > 0) {
+                System.out.println("- " + ing.getName() + ": В наявності (" + ing.getCount() + " шт.)");
             } else {
                 System.out.println("- " + ing.getName() + ": Відсутній!");
             }
@@ -121,7 +122,7 @@ public class RestaurantStorage implements Serializable{
             for (var ing : sklad) {
                 if (ing.getName().equals(required)) {
                     found = true;
-                    if (ing.getcount() < 1) {
+                    if (ing.getCount() < 1) {
                         notifyObservers("КРИТИЧНО: Закінчився інгредієнт: " + required);
                         throw new RestaurantException("Немає інгредієнта [" + required + "] для страви " + dish.getName());
                     }
@@ -134,11 +135,63 @@ public class RestaurantStorage implements Serializable{
         for (var dish : order.getOrderedDishes()) {
             for (var ing : sklad) {
                 if (ing.getName().equals(dish.getRequiredIngredient())) {
-                    ing.setcount(ing.getcount() - 1);
+                    ing.setCount(ing.getCount() - 1);
                 }
             }
         }
         order.sendToKitchen();
         notifyObservers("Замовлення №" + order.getId() + " успішно перевірено та передано на кухню.");
+    }
+
+    public List<Ingredient> getSklad() {
+        return sklad;
+    }
+
+    public void setSklad(List<Ingredient> sklad) {
+        this.sklad = sklad;
+    }
+
+    public List<Dish> getMenu() {
+        return menu;
+    }
+
+    public void setMenu(List<Dish> menu) {
+        this.menu = menu;
+    }
+
+    public List<Table> getTables() {
+        return tables;
+    }
+
+    public void setTables(List<Table> tables) {
+        this.tables = tables;
+    }
+
+    public int getOrderIdCounter() {
+        return orderIdCounter;
+    }
+
+    public void setOrderIdCounter(int orderIdCounter) {
+        this.orderIdCounter = orderIdCounter;
+    }
+
+    public List<OrderObserver> getObservers() {
+        return observers;
+    }
+
+    public void setObservers(List<OrderObserver> observers) {
+        this.observers = observers;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
+
+    public static void setInstance(RestaurantStorage instance) {
+        RestaurantStorage.instance = instance;
     }
 }

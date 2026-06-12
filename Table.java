@@ -17,4 +17,8 @@ public class Table implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
 }

@@ -12,10 +12,13 @@ public class Ingredient implements Serializable {
     public String getName() {
         return name;
     }
-    public int getcount() {
+    public int getCount() {
         return count;
     }
-    public void setcount(int count) {
+    public void setCount(int count) {
         this.count = count;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }

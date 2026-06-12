@@ -25,4 +25,20 @@ public class Dish implements MenuItem, Serializable {
     public String getRequiredIngredient() {
         return requiredIngredient;
     }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setRequiredIngredient(String requiredIngredient) {
+        this.requiredIngredient = requiredIngredient;
+    }
 }
